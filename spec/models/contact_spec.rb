@@ -2,10 +2,9 @@ require "rails_helper"
 
 describe Contact do
   describe "validations" do
-    let(:contact) { Contact.new(firstname: "Janusz", lastname: "Kowalski", email: "test@example.com") }
-    let(:contact_2) { Contact.new(firstname: "Grażyna", lastname: "Kowalska", email: "test@example.com") }
+    let(:contact) { build(:contact) }
 
-    it "is valid with a firstname, lastname and email" do
+    it "has a valid factory" do
       expect(contact).to be_valid
     end
 
@@ -32,20 +31,27 @@ describe Contact do
 
     it "is invalid with a duplicate email address" do
       contact.save
+      contact_2 = build(:contact, email: contact.email)
 
       expect(contact_2).not_to be_valid
       expect(contact_2.errors[:email]).to include("has already been taken")
     end
 
     it "returns a contact's full name as a string" do
-      expect(contact.name).to eq "Janusz Kowalski"
+      expect(contact.name).to eq [contact.firstname, contact.lastname].join(" ")
+    end
+
+    it "has three phone numbers" do
+      contact.save
+
+      expect(contact.phones.count).to eq 3
     end
   end
 
   describe "self.by_letter" do
-    let(:kowalski) { Contact.create(firstname: "Janusz", lastname: "Kowalski", email: "test1@example.com") }
-    let(:mieczka) { Contact.create(firstname: "Amadeusz", lastname: "Mieczka", email: "test2@example.com") }
-    let(:mrzonka) { Contact.create(firstname: "Kryspin", lastname: "Mrzonka", email: "test3@example.com") }
+    let(:kowalski) { create(:contact, lastname: "Kowalski") }
+    let(:mieczka) { create(:contact, lastname: "Mieczka") }
+    let(:mrzonka) { create(:contact, lastname: "Mrzonka") }
 
     context "with matching letters" do
       it "returns a sorted array of results that match" do
