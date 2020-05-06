@@ -44,6 +44,7 @@ gem 'bootstrap-sass', '~> 3.1.1'
 group :development, :test do
   gem "rspec-rails", "~> 3.1.0"
   gem "factory_girl_rails", "~> 4.4.1"
+  gem "byebug"
 end
 
 group :test do
