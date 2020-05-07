@@ -169,18 +169,14 @@ describe ContactsController do
   end
 
   describe "administrator access" do
-    let(:admin) { create :admin }
-
-    before { session[:user_id] = admin.id }
+    before { set_user_session create(:admin) }
 
     it_behaves_like "public access to contacts"
     it_behaves_like "full access to contacts"
   end
 
   describe "user access" do
-    let(:user) { create :user }
-
-    before { session[:user_id] = user.id }
+    before { set_user_session create(:user) }
 
     it_behaves_like "public access to contacts"
     it_behaves_like "full access to contacts"
@@ -195,7 +191,7 @@ describe ContactsController do
       it "requires login" do
         get :edit, id: contact
 
-        expect(response).to redirect_to login_url
+        expect(response).to require_login
       end
     end
 
@@ -203,7 +199,7 @@ describe ContactsController do
       it "requires login" do
         post :create, contact: attributes_for(:contact)
 
-        expect(response).to redirect_to login_url
+        expect(response).to require_login
       end
     end
 
@@ -213,7 +209,7 @@ describe ContactsController do
       it "requires login" do
         patch :update, id: contact, contact: attributes_for(:contact)
 
-        expect(response).to redirect_to login_url
+        expect(response).to require_login
       end
     end
 
@@ -223,7 +219,7 @@ describe ContactsController do
       it "requires login" do
         delete(:destroy, id: contact)
 
-        expect(response).to redirect_to login_url
+        expect(response).to redirect_to require_login
       end
     end
   end
